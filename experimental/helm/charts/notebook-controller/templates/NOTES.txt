@@ -1,0 +1,61 @@
+{{- if or .Values.service.enabled .Values.metricsService.enabled }}
+1. Monitor the notebook controller:
+
+{{- if .Values.service.enabled }}
+   Main service: {{ include "notebook-controller.resourceName" . }}-service
+{{- end }}
+{{- if .Values.metricsService.enabled }}
+   Metrics service: {{ include "notebook-controller.metricsServiceName" . }}
+{{- end }}
+
+   Check controller status:
+   kubectl get pods -n {{ include "notebook-controller.namespace" . }} -l {{ include "notebook-controller.deploymentSelectorLabels" . | replace "\n" "," }}
+
+{{- if .Values.monitoring.enabled }}
+   View metrics (if auth proxy disabled):
+   kubectl port-forward -n {{ include "notebook-controller.namespace" . }} deployment/{{ include "notebook-controller.resourceName" . }}-deployment {{ .Values.controller.ports.metrics }}:{{ .Values.controller.ports.metrics }}
+   # Then visit http://localhost:{{ .Values.controller.ports.metrics }}/metrics
+{{- end }}
+{{- end }}
+
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get values {{ .Release.Name }}
+
+{{- if eq .Values.deploymentMode "kubeflow" }}
+
+🎉 Kubeflow Notebook Controller has been deployed!
+
+Configuration:
+- Deployment Mode: Kubeflow
+- Namespace: {{ include "notebook-controller.namespace" . }}
+- Istio Integration: {{ .Values.controller.config.useIstio }}
+{{- if .Values.controller.config.useIstio }}
+- Istio Gateway: {{ .Values.controller.config.istioGateway }}
+{{- end }}
+- Culling Enabled: {{ .Values.controller.config.enableCulling }}
+
+The controller will manage Jupyter notebooks in your Kubeflow cluster.
+{{- else }}
+
+🎉 Notebook Controller has been deployed in standalone mode!
+
+Configuration:
+- Deployment Mode: Standalone
+- Namespace: {{ include "notebook-controller.namespace" . }}
+- Istio Integration: Disabled
+- Culling Enabled: {{ .Values.controller.config.enableCulling }}
+
+The controller will manage Jupyter notebooks independently.
+{{- end }}
+
+Next steps:
+1. Create notebook Custom Resources using the kubeflow.org/v1 API
+2. Monitor controller logs: kubectl logs -n {{ include "notebook-controller.namespace" . }} deployment/{{ include "notebook-controller.resourceName" . }}-deployment
+3. Check controller status: kubectl get pods -n {{ include "notebook-controller.namespace" . }}
+
+For more information, visit: https://github.com/kubeflow/kubeflow

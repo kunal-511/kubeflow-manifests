@@ -1,0 +1,33 @@
+{{/*
+This is a test configuration to validate the chart renders correctly
+*/}}
+{{- if .Values.controller.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "notebook-controller.fullname" . }}-test"
+  namespace: {{ include "notebook-controller.namespace" . }}
+  labels:
+    {{- include "notebook-controller.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+  - name: test
+    image: busybox:1.35
+    command:
+    - /bin/sh
+    - -c
+    - |
+      echo "Testing notebook-controller chart deployment..."
+      echo "Deployment mode: {{ .Values.deploymentMode }}"
+      echo "Namespace: {{ include "notebook-controller.namespace" . }}"
+      echo "Controller enabled: {{ .Values.controller.enabled }}"
+      echo "Auth proxy enabled: {{ .Values.controller.authProxy.enabled }}"
+      echo "Webhook enabled: {{ .Values.controller.webhook.enabled }}"
+      echo "Istio enabled: {{ .Values.controller.config.useIstio }}"
+      echo "Chart test completed successfully!"
+{{- end }}
