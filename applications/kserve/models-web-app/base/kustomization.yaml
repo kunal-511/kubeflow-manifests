@@ -14,6 +14,7 @@ images:
 configMapGenerator:
 - literals:
   - APP_DISABLE_AUTH="True"
+  - APP_PREFIX="/"
   name: kserve-models-web-app-config
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization

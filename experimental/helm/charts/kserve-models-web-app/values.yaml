@@ -51,7 +51,7 @@ app:
     # -- Header name for user ID (used in Kubeflow integration)
     useridHeader: "kubeflow-userid"
     # -- Application prefix for URL routing
-    appPrefix: "/kserve-endpoints"
+    appPrefix: "/"
     # -- Additional environment variables
     env: []
     
@@ -235,7 +235,7 @@ kubeflow:
   config:
     disableAuth: false
     useridHeader: "kubeflow-userid"
-    appPrefix: "/kserve-endpoints"
+    appPrefix: "/"
 
 # Monitoring configuration
 monitoring:

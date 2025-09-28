@@ -23,6 +23,7 @@ data:
   APP_PREFIX: {{ .Values.kubeflow.config.appPrefix | quote }}
   {{- else }}
   APP_DISABLE_AUTH: "True"
+  APP_PREFIX: {{ .Values.app.config.appPrefix | quote }}
   {{- end }}
   {{- with .Values.configMap.data }}
   {{- toYaml . | nindent 2 }}

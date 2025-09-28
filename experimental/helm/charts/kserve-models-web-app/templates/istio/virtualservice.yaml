@@ -32,9 +32,16 @@ spec:
   {{- else }}
   - match:
     - uri:
-        prefix: {{ .Values.kubeflow.enabled | ternary .Values.kubeflow.config.appPrefix .Values.app.config.appPrefix }}/
+        {{- $appPrefix := .Values.kubeflow.enabled | ternary .Values.kubeflow.config.appPrefix .Values.app.config.appPrefix }}
+        {{- if eq $appPrefix "/" }}
+        prefix: /
+        {{- else }}
+        prefix: {{ $appPrefix }}/
+        {{- end }}
+    {{- if ne $appPrefix "/" }}
     rewrite:
       uri: /
+    {{- end }}
     route:
     - destination:
         host: {{ include "kserve-models-web-app.destinationHost" . }}

@@ -11,9 +11,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /kserve-endpoints/
-    rewrite:
-      uri: /
+        prefix: /
     route:
     - destination:
         host: kserve-models-web-app.kserve.svc.cluster.local
