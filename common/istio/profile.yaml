@@ -18,17 +18,12 @@ spec:
           value: "true"
   hub: gcr.io/istio-release
   profile: default
-  tag: 1.27.0
+  tag: 1.28.0
   values:
     defaultRevision: ""
     gateways:
       istio-egressgateway: {}
       istio-ingressgateway: {}
-      seccompProfile:
-        type: RuntimeDefault
     global:
       configValidation: true
       istioNamespace: istio-system
-      proxy:
-        seccompProfile:
-          type: RuntimeDefault
